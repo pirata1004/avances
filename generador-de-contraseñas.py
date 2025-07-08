@@ -10,12 +10,12 @@ def generar():
             contraseña += random.choice(string.ascii_letters)
     contraseña_var.set(contraseña)
 
-# ✅ Crear primero la ventana
+
 app = tk.Tk()
 app.geometry('500x300')
 app.title('GENERADOR DE CONTRASEÑAS')
 
-# ✅ Luego crear variables asociadas a esa ventana
+
 contraseña_var = tk.StringVar()
 contraseña_var.set("Aquí aparecerá tu contraseña")
 
