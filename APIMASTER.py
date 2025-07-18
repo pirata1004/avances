@@ -1,3 +1,5 @@
+from tkinter.messagebox import showinfo
+
 import requests
 import customtkinter as ctk
 from customtkinter import *
@@ -39,28 +41,33 @@ def RICK1(name):
 def decision(valor):
     estado = switch.get()
 
+    try:
+        if valor == "POKEMON":
+            if estado == 0:
+                POKEFIND(entrada1.get())
+            if estado == 1:
+                FULLPOKEMON()
 
-    if valor == "POKEMON":
-        if estado == 0:
-            POKEFIND(entrada1.get())
-        if estado == 1:
-            FULLPOKEMON()
+        elif valor == "STAR-WARS":
+            if estado == 1:
+                STARFIND()
+            elif estado == 0:
+                STAR1(entrada1.get())
 
-    elif valor == "STAR-WARS":
-        if estado == 1:
-            STARFIND()
-        elif estado == 0:
-            STAR1(entrada1.get())
-
-        else:
-            actualizar_textbox("algo no salio bien")
-    elif valor == "RICK-AND-MORTY":
-        if estado == 0:
-            RICK1(entrada1.get())
-        elif estado == 1:
-            FULLRICK()
-    elif valor == "COCTELES":
-        cocteles(entrada1.get())
+            else:
+                actualizar_textbox("algo no salio bien")
+        elif valor == "RICK-AND-MORTY":
+            if estado == 0:
+                RICK1(entrada1.get())
+            elif estado == 1:
+                FULLRICK()
+        elif valor == "COCTELES":
+            if estado == 0:
+                cocteles(entrada1.get())
+            else:
+                showinfo("ERROR BUSQUEDA","en el criterio de cocteles no esta disponible la opcion todos")
+    except:
+        showinfo("ERROR BUSQUEDA", "revise el nombre o el criterio de busqueda")
 
 def POKEFIND(pokemon):
     POKEDEX = f'https://pokeapi.co/api/v2/pokemon/{pokemon.lower()}'
@@ -111,13 +118,13 @@ def cocteles(name):
 
     request = requests.get(coctelurl).json()
     request = request["drinks"]
-    a = 0
+
     for item in request:
-        a = a + 1
 
         actualizar_textbox(item["strInstructionsES"])
         actualizar_textbox("-------------------------")
         actualizar_textbox(item["strDrink"])
+        actualizar_textbox("-")
 
 def STAR1(nombre):
     url = f"https://swapi.py4e.com/api/people/?search={nombre}"
@@ -192,7 +199,7 @@ switch.pack(pady=10,side="right")
 
 def actualizar_textbox(texto):
     textbox.configure(state="normal")
-    textbox.insert("0.0", texto + "\n")
+    textbox.insert("0.0", str(texto) + "\n")
     textbox.configure(state="disabled")
 def borrar_textbox():
     textbox.configure(state="normal")     # Permitir edición
