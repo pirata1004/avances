@@ -1,14 +1,51 @@
-from tkinter.messagebox import showinfo
+import datetime
 
+from tkinter.messagebox import showinfo
 import requests
 import customtkinter as ctk
 from customtkinter import *
+from PIL import  Image
+
+def mostrarimagen():
+    image = Image.open("C:\VSCODE\QR.png",mode="r")
+    image.show('QR.png')
+def futbolista(player):
+    url = f'https://www.thesportsdb.com/api/v1/json/123/searchplayers.php?p={player}'
+    response = requests.get(url).json()
+    resultado = response['player']
+    for coindencia in resultado:
+        actualizar_textbox(coindencia["strPosition"])
+        actualizar_textbox(("nacionalidad" + " " + coindencia["strNationality"]))
+        actualizar_textbox(coindencia["strTeam"])
+        actualizar_textbox(coindencia["strPlayer"])
+
+def monetario():
+    current_date = datetime.date.today()
 
 
+    url = (f'https://api.frankfurter.dev/v1/{current_date}')
+    datos = requests.get(url).json()
 
-ctk.set_appearance_mode("dark")  # Opciones: "light", "dark", "system"
-ctk.set_default_color_theme("blue")  # También puedes probar: "green", "dark-blue", etc.
+    for coindencia in datos["rates"]:
+        actualizar_textbox(("un euro son" , str(coindencia) , str(datos["rates"][coindencia])))
 
+def monedas():
+    url = 'https://api.frankfurter.dev/v1/currencies'
+    response = requests.get(url).json()
+    for coindencia in response:
+        print( str(coindencia) , str(response[coindencia]))
+        actualizar_textbox(((coindencia) , (response[coindencia])))
+
+def comida(alimento):
+
+    url = f' https://www.themealdb.com/api/json/v1/1/search.php?s={alimento}'
+    response = requests.get(url).json()
+    resultado = response["meals"]
+    a = 0
+    for coincidencia in resultado:
+        actualizar_textbox(coincidencia["strInstructions"])
+        actualizar_textbox(coincidencia["strArea"])
+        actualizar_textbox(coincidencia["strMeal"])
 
 
 def FULLRICK():
@@ -41,7 +78,8 @@ def RICK1(name):
 def decision(valor):
     estado = switch.get()
 
-    try:
+    if 1 == 1:
+    # try:
         if valor == "POKEMON":
             if estado == 0:
                 POKEFIND(entrada1.get())
@@ -66,8 +104,24 @@ def decision(valor):
                 cocteles(entrada1.get())
             else:
                 showinfo("ERROR BUSQUEDA","en el criterio de cocteles no esta disponible la opcion todos")
-    except:
-        showinfo("ERROR BUSQUEDA", "revise el nombre o el criterio de busqueda")
+        elif valor == "COMIDA":
+            if estado == 0:
+                comida(entrada1.get())
+            if estado == 1:
+                showinfo("NO DISPONIBLE","OPCION TODOS NO DISPONIBLE EN ALIMENTOS")
+        elif valor == "MONEDA":
+            if estado == 0:
+                monetario()
+            if estado == 1:
+                monedas()
+        elif valor == "FUTBOLISTA":
+            if estado == 0:
+                futbolista(entrada1.get())
+            if estado == 1:
+                actualizar_textbox("cuando marque la funcion TODOS en FUTBOLISTA ara busqueda entre equipos y no jugadores")
+
+    # except:
+    #     showinfo("ERROR BUSQUEDA", "revise el nombre o el criterio de busqueda")
 
 def POKEFIND(pokemon):
     POKEDEX = f'https://pokeapi.co/api/v2/pokemon/{pokemon.lower()}'
@@ -157,8 +211,15 @@ def mostrar_valor():
     decision(valor)
 
 
+ctk.set_appearance_mode("dark")  # Opciones: "light", "dark", "system"
+ctk.set_default_color_theme("blue")  # También puedes probar: "green", "dark-blue", etc.
+
+
+
+
+
 app = ctk.CTk()
-app.geometry('800x800')
+app.geometry('1000x1000')
 
 app.resizable(False, False)
 
@@ -173,7 +234,7 @@ label = ctk.CTkLabel(master=app,text="API MASTER",font=("Arial", 90)).pack()
 
 
 
-combo = ctk.CTkComboBox(master=app, values=["POKEMON", "STAR-WARS", "RICK-AND-MORTY","COCTELES"])
+combo = ctk.CTkComboBox(master=app, values=["POKEMON", "STAR-WARS", "RICK-AND-MORTY","COCTELES","COMIDA","MONEDA","FUTBOLISTA"])
 combo.pack(pady=10)
 
 # Obtener valor seleccionado
@@ -191,7 +252,7 @@ textbox.pack(pady=20)
 
 CTkButton(master=app,text="borrar",command= lambda: borrar_textbox()  ).pack(pady=10)
 
-switch = ctk.CTkSwitch(master=app, text="TODOS", command= lambda : actualizar_textbox("una busqueda completa puede dar parones e interrupciones"))
+switch = ctk.CTkSwitch(master=app, text="TODOS", command= lambda :actualizar_textbox("cuando este seleccionado TODOS y FUTBOLISTA se hara una busqueda de equipos \n puede dar parones la busqueda completa" ) )
 switch.pack(pady=10,side="right")
 
 # Obtener estado: 1 o 0
@@ -208,4 +269,13 @@ def borrar_textbox():
 
 
 
+
+
 app.mainloop()
+
+if valor == "ACTUALIZA":
+
+    if mostrar_valor() == "FUTBOLISTA":
+        actualizar_textbox("cuando este seleccionado TODOS y FUTBOLISTA se hara una busqueda de equipos")
+    else:
+        actualizar_textbox("puede dar parones la busqueda completa")
