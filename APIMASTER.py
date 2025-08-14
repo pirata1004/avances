@@ -267,4 +267,3 @@ def borrar_textbox():
 
 
 app.mainloop()
-
